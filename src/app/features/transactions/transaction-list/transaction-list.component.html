@@ -1,0 +1,358 @@
+<div class="transactions-page animate-fade-in">
+
+  @if (bankingService.selectedAccount(); as acc) {
+    <div class="bank-card account-banner">
+      <div class="banner-left">
+        <div class="acc-badge-icon">
+          <i [class]="acc.type === 'Savings' ? 'pi pi-percentage' : 'pi pi-credit-card'"></i>
+        </div>
+        <div class="acc-title-wrap">
+          <div class="acc-type-row">
+            <h1 class="acc-heading">{{ acc.type }} Account</h1>
+            <span class="badge badge-active">{{ acc.status }}</span>
+          </div>
+          <div class="acc-meta-row">
+            <span class="mono-text acc-id-pill">{{ acc.id }}</span>
+            <span class="text-sep">•</span>
+            <span class="mono-text iban-text">{{ acc.iban | ibanFormat }}</span>
+            <span class="text-sep">•</span>
+            @if (bankingService.selectedCustomer(); as sc) {
+              <span class="holder-name">Holder: {{ sc.name }}</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="banner-right">
+        <!-- Balance Display -->
+        <div class="balance-container">
+          <span class="balance-label">Available Balance</span>
+          <span class="balance-display mono-text">{{ acc.balance | egpCurrency }}</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="banner-actions">
+          <button class="btn btn-secondary btn-sm" (click)="showMiniStatementModal.set(true)">
+            <i class="pi pi-receipt"></i>
+            <span>Mini Statement</span>
+          </button>
+
+          <button class="btn btn-primary btn-sm" (click)="showCreateModal.set(true)">
+            <i class="pi pi-plus"></i>
+            <span>New Transaction</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+
+  @if (bankingService.selectedCustomerAccounts().length > 1) {
+    <div class="account-selector-strip">
+      <span class="strip-label">Customer Accounts:</span>
+      <div class="strip-buttons">
+        @for (a of bankingService.selectedCustomerAccounts(); track a.id) {
+          <button
+            class="strip-btn"
+            [class.active]="bankingService.selectedAccountId() === a.id"
+            (click)="selectAccount(a.id)"
+          >
+            <i [class]="a.type === 'Savings' ? 'pi pi-percentage' : 'pi pi-wallet'"></i>
+            <span>{{ a.type }} ({{ a.id }})</span>
+            <span class="mono-text pill-bal">{{ a.balance | egpCurrency }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+
+  <div class="bank-card filter-toolbar-card">
+    <div class="toolbar-top">
+      <div class="search-box">
+        <i class="pi pi-search search-icon"></i>
+        <input
+          type="text"
+          class="form-control search-input"
+          placeholder="Search merchant, ID, or category..."
+          [value]="searchTerm()"
+          (input)="onSearchInput($event)"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        @if (searchTerm()) {
+          <button
+            class="clear-icon-btn"
+            (click)="searchTerm.set('')"
+          >
+            <i class="pi pi-times"></i>
+          </button>
+        }
+      </div>
+
+      <div class="toolbar-actions">
+        <button
+          class="btn btn-secondary btn-sm"
+          (click)="resetFilters()"
+          [disabled]="!hasActiveFilters()"
+        >
+          <i class="pi pi-filter-slash"></i>
+          <span>Reset Filters</span>
+        </button>
+
+        <button
+          class="btn btn-credit btn-sm"
+          (click)="exportToCSV()"
+          title="Export displayed transactions to CSV"
+        >
+          <i class="pi pi-download"></i>
+          <span>Export CSV</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-controls-grid">
+      <div class="filter-item">
+        <label class="filter-label">Transaction Type</label>
+        <select
+          class="form-select filter-select"
+          [ngModel]="selectedType()"
+          (ngModelChange)="selectedType.set($event)"
+        >
+          <option value="All">All Types (Debit & Credit)</option>
+          <option value="Debit">Debit Only</option>
+          <option value="Credit">Credit Only</option>
+        </select>
+      </div>
+
+
+      <div class="filter-item">
+        <label class="filter-label">Category</label>
+        <select
+          class="form-select filter-select"
+          [ngModel]="selectedCategory()"
+          (ngModelChange)="selectedCategory.set($event)"
+        >
+          <option value="All">All Categories</option>
+          @for (cat of bankingService.categories(); track cat) {
+            <option [value]="cat">{{ cat }}</option>
+          }
+        </select>
+      </div>
+
+
+      <div class="filter-item">
+        <label class="filter-label">From Date</label>
+        <input
+          type="date"
+          class="form-control filter-input"
+          [ngModel]="startDate()"
+          (ngModelChange)="startDate.set($event)"
+        />
+      </div>
+
+
+      <div class="filter-item">
+        <label class="filter-label">To Date</label>
+        <input
+          type="date"
+          class="form-control filter-input"
+          [ngModel]="endDate()"
+          (ngModelChange)="endDate.set($event)"
+        />
+      </div>
+
+
+      <div class="filter-item">
+        <label class="filter-label">Sort By</label>
+        <div class="sort-input-group">
+          <select
+            class="form-select filter-select"
+            [ngModel]="sortField()"
+            (ngModelChange)="sortField.set($event)"
+          >
+            <option value="date">Date</option>
+            <option value="amount">Amount</option>
+            <option value="merchant">Merchant</option>
+            <option value="category">Category</option>
+          </select>
+          <button
+            type="button"
+            class="sort-dir-btn"
+            (click)="toggleSortDirection()"
+            [title]="sortDirection() === 'asc' ? 'Ascending (Click for Descending)' : 'Descending (Click for Ascending)'"
+          >
+            <i [class]="sortDirection() === 'asc' ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bank-card table-card">
+    <div class="table-header-meta">
+      <div class="results-count">
+        Showing <strong>{{ paginatedTransactions().length }}</strong> of
+        <strong>{{ processedTransactions().length }}</strong> transactions
+      </div>
+
+      <div class="page-size-selector">
+        <span class="ps-label">Rows per page:</span>
+        <select
+          class="form-select ps-select"
+          [ngModel]="pageSize()"
+          (ngModelChange)="pageSize.set($event); currentPage.set(1)"
+        >
+          <option [ngValue]="5">5</option>
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="25">25</option>
+        </select>
+      </div>
+    </div>
+
+    @if (paginatedTransactions().length > 0) {
+      <div class="table-responsive">
+        <table class="banking-table">
+          <thead>
+            <tr>
+              <th>
+                <button class="th-sort-btn" (click)="setSort('date')">
+                  <span>Date</span>
+                  <i class="pi" [ngClass]="getSortIcon('date')"></i>
+                </button>
+              </th>
+              <th>Transaction ID</th>
+              <th>
+                <button class="th-sort-btn" (click)="setSort('merchant')">
+                  <span>Merchant / Destination</span>
+                  <i class="pi" [ngClass]="getSortIcon('merchant')"></i>
+                </button>
+              </th>
+              <th>
+                <button class="th-sort-btn" (click)="setSort('category')">
+                  <span>Category</span>
+                  <i class="pi" [ngClass]="getSortIcon('category')"></i>
+                </button>
+              </th>
+              <th>Type</th>
+              <th class="text-right">
+                <button class="th-sort-btn float-right" (click)="setSort('amount')">
+                  <span>Amount (EGP)</span>
+                  <i class="pi" [ngClass]="getSortIcon('amount')"></i>
+                </button>
+              </th>
+              <th class="text-right">Balance After</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (tx of paginatedTransactions(); track tx.id) {
+              <tr class="tx-row">
+              
+                <td>
+                  <span class="mono-text tx-date">{{ tx.date }}</span>
+                </td>
+
+      
+                <td>
+                  <span class="mono-badge">{{ tx.id }}</span>
+                </td>
+
+     
+                <td>
+                  <div class="merchant-cell">
+                    <span class="merchant-name">{{ tx.merchant }}</span>
+                    @if (tx.description) {
+                      <span class="tx-desc">{{ tx.description }}</span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  <span class="cat-tag">
+                    <i class="pi pi-tag"></i>
+                    {{ tx.category }}
+                  </span>
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="tx.type === 'Debit' ? 'badge-debit' : 'badge-credit'"
+                  >
+                    <i [class]="tx.type === 'Debit' ? 'pi pi-arrow-up-right' : 'pi pi-arrow-down-left'"></i>
+                    {{ tx.type }}
+                  </span>
+                </td>
+
+                <td class="text-right">
+                  <span
+                    class="mono-text amount-val"
+                    [class.amount-debit]="tx.type === 'Debit'"
+                    [class.amount-credit]="tx.type === 'Credit'"
+                  >
+                    {{ tx.type === 'Debit' ? '-' : '+' }}{{ tx.amount | egpCurrency }}
+                  </span>
+                </td>
+
+                <td class="text-right">
+                  <span class="mono-text balance-after-val">
+                    {{ getTxBalanceAfter(tx) | egpCurrency }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (totalPages() > 1) {
+        <div class="pagination-bar">
+          <button
+            class="btn btn-secondary btn-sm"
+            [disabled]="currentPage() === 1"
+            (click)="currentPage.set(currentPage() - 1)"
+          >
+            <i class="pi pi-chevron-left"></i>
+            <span>Previous</span>
+          </button>
+
+          <span class="page-indicator">
+            Page <strong>{{ currentPage() }}</strong> of <strong>{{ totalPages() }}</strong>
+          </span>
+
+          <button
+            class="btn btn-secondary btn-sm"
+            [disabled]="currentPage() === totalPages()"
+            (click)="currentPage.set(currentPage() + 1)"
+          >
+            <span>Next</span>
+            <i class="pi pi-chevron-right"></i>
+          </button>
+        </div>
+      }
+    } @else {
+      <app-empty-state
+        icon="pi pi-receipt"
+        title="No transactions found"
+        description="No transactions match your applied filters. Try adjusting your search or date range."
+        actionLabel="Reset Filters"
+        actionIcon="pi pi-refresh"
+        (actionClick)="resetFilters()"
+      ></app-empty-state>
+    }
+  </div>
+
+
+  @if (showCreateModal()) {
+    <app-transaction-create
+      [account]="bankingService.selectedAccount() || undefined"
+      (close)="showCreateModal.set(false)"
+      (created)="onTransactionCreated()"
+    ></app-transaction-create>
+  }
+
+  @if (showMiniStatementModal()) {
+    <app-mini-statement-dialog
+      [account]="bankingService.selectedAccount() || undefined"
+      (close)="showMiniStatementModal.set(false)"
+    ></app-mini-statement-dialog>
+  }
+</div>

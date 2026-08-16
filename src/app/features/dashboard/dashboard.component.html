@@ -1,0 +1,94 @@
+<div class="dashboard-page animate-fade-in">
+
+  <div class="bank-card table-section-card">
+    <div class="section-toolbar">
+      <div class="toolbar-title-wrap">
+        <h2 class="section-title">Customer Directory</h2>
+        <span class="section-count">({{ filteredCustomers().length }} customers)</span>
+      </div>
+
+
+    </div>
+
+
+    @if (filteredCustomers().length > 0) {
+    <div class="table-responsive">
+      <table class="banking-table">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>CIF Number</th>
+            <th>National ID</th>
+            <th>Segment</th>
+            <th>Contact Info</th>
+            <th>Accounts</th>
+            <th class="text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (customer of filteredCustomers(); track customer.CIF) {
+          <tr [class.selected-row]="bankingService.selectedCustomerId() === customer.CIF">
+
+            <td>
+              <div class="customer-cell">
+                <div class="customer-avatar">
+                  {{ customer.name.charAt(0) }}
+                </div>
+                <div class="customer-info">
+                  <span class="customer-name">{{ customer.name }}</span>
+                  <span class="customer-email">{{ customer.email }}</span>
+                </div>
+              </div>
+            </td>
+
+
+            <td>
+              <span class="mono-badge">{{ customer.CIF }}</span>
+            </td>
+
+            <td>
+              <span class="mono-text national-id">{{ customer.nationalId }}</span>
+            </td>
+
+
+            <td>
+              <span class="badge" [ngClass]="customer.segment === 'Priority' ? 'badge-priority' : 'badge-retail'">
+                <i [class]="customer.segment === 'Priority' ? 'pi pi-star-fill' : 'pi pi-user'"></i>
+                {{ customer.segment }}
+              </span>
+            </td>
+
+    
+            <td>
+              <div class="contact-cell">
+                <span class="phone-num">{{ customer.phone }}</span>
+              </div>
+            </td>
+
+
+            <td>
+              <div class="accounts-pill">
+                <i class="pi pi-credit-card"></i>
+                <span>{{ getCustomerAccountsCount(customer.CIF) }} Accounts</span>
+              </div>
+            </td>
+
+   
+            <td class="text-right">
+              <button class="btn btn-outline-primary btn-sm" (click)="viewCustomerDetails(customer.CIF)">
+                <span>View Details</span>
+                <i class="pi pi-arrow-right"></i>
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    } @else {
+    <app-empty-state icon="pi pi-users" title="No customers match your search"
+      description="Try changing your search terms or clearing the filter." actionLabel="Reset Search"
+      actionIcon="pi pi-refresh" (actionClick)="searchQuery.set('')"></app-empty-state>
+    }
+  </div>
+</div>

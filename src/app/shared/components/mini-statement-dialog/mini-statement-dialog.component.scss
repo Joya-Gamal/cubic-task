@@ -1,0 +1,225 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.statement-card {
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+  background: var(--surface-0);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.statement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.bank-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--primary-50);
+  color: var(--primary-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--surface-900);
+}
+
+.subtitle {
+  font-size: 0.825rem;
+  color: var(--surface-500);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--surface-400);
+  cursor: pointer;
+  padding: 0.4rem;
+  &:hover { color: var(--surface-800); }
+}
+
+.statement-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  background: var(--surface-50);
+  border: 1px solid var(--surface-200);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.summary-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.lbl {
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: var(--surface-500);
+  text-transform: uppercase;
+}
+
+.val {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--surface-800);
+}
+
+.balance-val {
+  color: var(--credit-700);
+  font-size: 1.1rem;
+}
+
+.statement-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.limit-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.limit-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--surface-600);
+}
+
+.limit-tabs {
+  display: flex;
+  gap: 0.35rem;
+  background: var(--surface-100);
+  padding: 0.2rem;
+  border-radius: var(--radius-md);
+}
+
+.limit-tab {
+  background: transparent;
+  border: none;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--surface-600);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &.active {
+    background: var(--surface-0);
+    color: var(--primary-600);
+    box-shadow: var(--shadow-xs);
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.statement-list-container {
+  overflow-x: auto;
+  border: 1px solid var(--surface-200);
+  border-radius: var(--radius-md);
+}
+
+.statement-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.825rem;
+
+  th {
+    background: var(--surface-50);
+    padding: 0.65rem 0.85rem;
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--surface-500);
+    border-bottom: 1px solid var(--surface-200);
+    text-align: left;
+  }
+
+  td {
+    padding: 0.75rem 0.85rem;
+    border-bottom: 1px solid var(--surface-100);
+    vertical-align: middle;
+  }
+}
+
+.tx-merchant {
+  display: flex;
+  flex-direction: column;
+}
+
+.merchant-name {
+  font-weight: 700;
+  color: var(--surface-900);
+}
+
+.tx-id {
+  font-size: 0.7rem;
+  color: var(--surface-400);
+}
+
+.cat-pill {
+  font-size: 0.75rem;
+  color: var(--surface-600);
+  background: var(--surface-100);
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-sm);
+}
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.font-bold { font-weight: 700; }
+.text-debit { color: var(--debit-600); }
+.text-credit { color: var(--credit-600); }
+.text-muted { color: var(--surface-500); }
+
+.statement-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+}
+
+.footer-note {
+  font-size: 0.725rem;
+  color: var(--surface-400);
+}

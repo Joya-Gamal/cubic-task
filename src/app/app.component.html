@@ -1,0 +1,31 @@
+<p-toast position="top-right" [life]="4500"></p-toast>
+
+<div class="app-layout" [class.is-auth-page]="isAuthPage()">
+
+  @if (!isAuthPage()) {
+    <app-header (toggleSidebar)="isSidebarOpen.set(!isSidebarOpen())"></app-header>
+  }
+
+  @if (!isAuthPage()) {
+    <div class="portal-body">
+
+      <app-sidebar [isOpen]="isSidebarOpen()"></app-sidebar>
+
+      <main class="portal-main">
+        <div class="main-content-container">
+  
+          @if (bankingService.isLoading()) {
+            <div class="loading-bar-wrap">
+              <div class="loading-bar-indeterminate"></div>
+            </div>
+          }
+
+
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+    </div>
+  } @else {
+    <router-outlet></router-outlet>
+  }
+</div>

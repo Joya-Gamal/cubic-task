@@ -1,0 +1,33 @@
+<header class="portal-header">
+  <div class="header-left">
+    <button class="mobile-toggle-btn" (click)="toggleSidebar.emit()" aria-label="Toggle navigation menu">
+      <i class="pi pi-bars"></i>
+    </button>
+
+    <a routerLink="/dashboard" class="brand-link">
+      <div class="brand-logo">
+        <i class="pi pi-building-columns"></i>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">BANK</span>
+        <span class="brand-sub">Corporate & Retail Portal</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="header-right">
+
+    @if (authService.currentUser(); as user) {
+      <div class="user-profile-wrap">
+        
+        <div class="user-meta">
+          <span class="user-name">{{ user.name }}</span>
+          <span class="user-role">{{ user.role }}</span>
+        </div>
+        <button class="logout-btn" (click)="authService.logout()" title="Sign Out">
+          <i class="pi pi-sign-out"></i>
+        </button>
+      </div>
+    }
+  </div>
+</header>

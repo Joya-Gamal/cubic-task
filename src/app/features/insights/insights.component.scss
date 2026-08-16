@@ -1,0 +1,166 @@
+.insights-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--surface-900);
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--surface-500);
+  margin-top: 0.2rem;
+}
+
+.insights-filters {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-box {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface-0);
+  border: 1px solid var(--surface-200);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.lbl {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--surface-500);
+  text-transform: uppercase;
+}
+
+.select-sm {
+  border: none;
+  background: transparent;
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--surface-800);
+  padding: 0.2rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.breakdown-card {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--surface-900);
+}
+
+.card-subtitle {
+  font-size: 0.85rem;
+  color: var(--surface-500);
+  margin-top: 0.15rem;
+}
+
+.breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.breakdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.cat-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--surface-900);
+}
+
+.tx-badge {
+  font-size: 0.725rem;
+  color: var(--surface-500);
+  background: var(--surface-100);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+}
+
+.item-val-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.amount-val {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--surface-900);
+}
+
+.percentage-val {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--surface-500);
+  width: 45px;
+  text-align: right;
+}
+
+.progress-track {
+  width: 100%;
+  height: 9px;
+  background: var(--surface-100);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}

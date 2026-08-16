@@ -1,0 +1,21 @@
+<div class="stat-card bank-card" [class.highlight]="highlight()">
+  <div class="stat-header">
+    <span class="stat-title">{{ title() }}</span>
+    <div class="stat-icon-wrap" [ngClass]="iconColorClass()">
+      <i [class]="icon()"></i>
+    </div>
+  </div>
+  <div class="stat-body">
+    <div class="stat-value mono-text">{{ value() }}</div>
+    @if (subtitle() || badgeText()) {
+      <div class="stat-footer">
+        @if (badgeText()) {
+          <span class="stat-badge" [ngClass]="badgeClass()">{{ badgeText() }}</span>
+        }
+        @if (subtitle()) {
+          <span class="stat-subtitle">{{ subtitle() }}</span>
+        }
+      </div>
+    }
+  </div>
+</div>

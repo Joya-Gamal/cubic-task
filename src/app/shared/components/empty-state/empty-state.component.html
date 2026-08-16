@@ -1,0 +1,19 @@
+<div class="empty-state-card">
+  <div class="icon-circle">
+    <i [class]="icon()"></i>
+  </div>
+  <h3 class="title">{{ title() }}</h3>
+  @if (description()) {
+    <p class="description">{{ description() }}</p>
+  }
+  @if (actionLabel()) {
+    <div class="action-wrap">
+      <button class="btn btn-primary btn-sm" (click)="actionClick.emit()">
+        @if (actionIcon()) {
+          <i [class]="actionIcon()"></i>
+        }
+        {{ actionLabel() }}
+      </button>
+    </div>
+  }
+</div>

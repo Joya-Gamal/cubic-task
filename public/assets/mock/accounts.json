@@ -1,0 +1,38 @@
+[
+  {
+    "id": "A1001",
+    "customerId": "C001",
+    "type": "Current",
+    "currency": "EGP",
+    "balance": 15320.55,
+    "iban": "EG380019000000000123456789",
+    "status": "Active"
+  },
+  {
+    "id": "A1002",
+    "customerId": "C001",
+    "type": "Savings",
+    "currency": "EGP",
+    "balance": 72000.0,
+    "iban": "EG380019000000000987654321",
+    "status": "Active"
+  },
+  {
+    "id": "A2001",
+    "customerId": "C002",
+    "type": "Current",
+    "currency": "EGP",
+    "balance": 45000.0,
+    "iban": "EG380019000000000555444333",
+    "status": "Active"
+  },
+  {
+    "id": "A2002",
+    "customerId": "C002",
+    "type": "Savings",
+    "currency": "EGP",
+    "balance": 128500.0,
+    "iban": "EG380019000000000888777666",
+    "status": "Active"
+  }
+]

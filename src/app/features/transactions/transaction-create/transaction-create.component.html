@@ -1,0 +1,268 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-card bank-card animate-fade-in" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <div class="modal-icon-badge">
+          <i class="pi pi-plus-circle"></i>
+        </div>
+        <div>
+          <h2 class="modal-title">Record New Transaction</h2>
+          @if (account(); as acc) {
+            <p class="modal-subtitle">
+              Posting to <strong>{{ acc.type }} Account ({{ acc.id }})</strong>
+            </p>
+          }
+        </div>
+      </div>
+      <button class="close-btn" (click)="close.emit()" aria-label="Close modal">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    @if (account(); as acc) {
+      <div class="balance-ribbon">
+        <div class="ribbon-item">
+          <span class="ribbon-label">Current Balance</span>
+          <span class="ribbon-val mono-text">{{ acc.balance | egpCurrency }}</span>
+        </div>
+        <div class="ribbon-arrow">
+          <i class="pi pi-arrow-right"></i>
+        </div>
+        <div class="ribbon-item">
+          <span class="ribbon-label">Projected Balance</span>
+          <span
+            class="ribbon-val mono-text"
+            [class.text-danger]="projectedBalance < 0"
+            [class.text-success]="projectedBalance > acc.balance"
+          >
+            {{ projectedBalance | egpCurrency }}
+          </span>
+        </div>
+      </div>
+    }
+
+    @if (form.errors?.['debitExceedsBalance'] || form.get('amount')?.errors?.['debitExceedsBalance']) {
+      <div class="alert-overdraft">
+        <i class="pi pi-exclamation-triangle"></i>
+        <div>
+          <strong>Insufficient Funds:</strong>
+          Debit amount of
+          <span class="mono-text">{{ (form.get('amount')?.value || 0) | egpCurrency }}</span>
+          exceeds available account balance ({{ (account()?.balance || 0) | egpCurrency }}).
+        </div>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="transaction-form" novalidate>
+      <div class="form-group">
+        <label>
+          Transaction Type <span class="required-star">*</span>
+        </label>
+        <div class="type-selector-grid">
+          <label
+            class="type-card type-debit"
+            [class.selected]="form.get('type')?.value === 'Debit'"
+          >
+            <input
+              type="radio"
+              value="Debit"
+              formControlName="type"
+              class="sr-only"
+            />
+            <div class="type-icon"><i class="pi pi-arrow-up-right"></i></div>
+            <div class="type-meta">
+              <span class="type-name">Debit (Withdrawal / Outflow)</span>
+              <span class="type-desc">Subtracts from account balance</span>
+            </div>
+          </label>
+
+          <label
+            class="type-card type-credit"
+            [class.selected]="form.get('type')?.value === 'Credit'"
+          >
+            <input
+              type="radio"
+              value="Credit"
+              formControlName="type"
+              class="sr-only"
+            />
+            <div class="type-icon"><i class="pi pi-arrow-down-left"></i></div>
+            <div class="type-meta">
+              <span class="type-name">Credit (Deposit / Inflow)</span>
+              <span class="type-desc">Adds to account balance</span>
+            </div>
+          </label>
+        </div>
+        @if (isFieldInvalid('type')) {
+          <div class="invalid-feedback">
+            <i class="pi pi-exclamation-circle"></i>
+            <span>Transaction Type is required.</span>
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="amount">
+          Amount (EGP) <span class="required-star">*</span>
+        </label>
+        <div class="input-with-affix">
+          <span class="affix">EGP</span>
+          <input
+            id="amount"
+            type="number"
+            step="0.01"
+            min="0.01"
+            max="100000"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('amount') || form.errors?.['debitExceedsBalance']"
+            formControlName="amount"
+            placeholder="0.00"
+            appAmountInput
+            appAutoFocus
+          />
+        </div>
+        <span class="form-hint">Must be greater than 0, max 2 decimals, up to 100,000 EGP.</span>
+
+        @if (isFieldInvalid('amount')) {
+          <div class="invalid-feedback">
+            <i class="pi pi-exclamation-circle"></i>
+            @if (form.get('amount')?.errors?.['required']) {
+              <span>Amount is required.</span>
+            }
+            @if (form.get('amount')?.errors?.['minAmount']) {
+              <span>Amount must be greater than 0.</span>
+            }
+            @if (form.get('amount')?.errors?.['maxAmount']) {
+              <span>Amount cannot exceed 100,000 EGP.</span>
+            }
+            @if (form.get('amount')?.errors?.['maxDecimals']) {
+              <span>Amount can have at most 2 decimal places.</span>
+            }
+            @if (form.get('amount')?.errors?.['debitExceedsBalance']) {
+              <span>Amount exceeds available account balance.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-row-2">
+
+        <div class="form-group flex-1">
+          <label for="date">
+            Transaction Date <span class="required-star">*</span>
+          </label>
+          <input
+            id="date"
+            type="date"
+            [max]="todayString"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('date')"
+            formControlName="date"
+          />
+          <span class="form-hint">Date must not be in the future.</span>
+          @if (isFieldInvalid('date')) {
+            <div class="invalid-feedback">
+              <i class="pi pi-exclamation-circle"></i>
+              @if (form.get('date')?.errors?.['required']) {
+                <span>Date is required.</span>
+              }
+              @if (form.get('date')?.errors?.['futureDate']) {
+                <span>Transaction date cannot be in the future.</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group flex-1">
+          <label for="category">
+            Category <span class="required-star">*</span>
+          </label>
+          <select
+            id="category"
+            class="form-select"
+            [class.is-invalid]="isFieldInvalid('category')"
+            formControlName="category"
+          >
+            <option value="" disabled>Select category...</option>
+            @for (cat of bankingService.categories(); track cat) {
+              <option [value]="cat">{{ cat }}</option>
+            }
+          </select>
+          @if (isFieldInvalid('category')) {
+            <div class="invalid-feedback">
+              <i class="pi pi-exclamation-circle"></i>
+              <span>Category selection is required.</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="merchant">
+          Merchant / Counterparty <span class="required-star">*</span>
+        </label>
+        <input
+          id="merchant"
+          type="text"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('merchant')"
+          formControlName="merchant"
+          placeholder="e.g. Carrefour, Vodafone, Amazon, Company Salary"
+          maxlength="50"
+        />
+        <div class="char-count-row">
+          <span class="form-hint">Merchant name must be 3 to 50 characters.</span>
+          <span class="char-count">{{ form.get('merchant')?.value?.length || 0 }}/50</span>
+        </div>
+        @if (isFieldInvalid('merchant')) {
+          <div class="invalid-feedback">
+            <i class="pi pi-exclamation-circle"></i>
+            @if (form.get('merchant')?.errors?.['required']) {
+              <span>Merchant name is required.</span>
+            }
+            @if (form.get('merchant')?.errors?.['minlength']) {
+              <span>Merchant must be at least 3 characters.</span>
+            }
+            @if (form.get('merchant')?.errors?.['maxlength']) {
+              <span>Merchant cannot exceed 50 characters.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="description">Note / Reference (Optional)</label>
+        <input
+          id="description"
+          type="text"
+          class="form-control"
+          formControlName="description"
+          placeholder="Optional transfer memo or notes"
+        />
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="close.emit()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="form.invalid || isSubmitting()"
+        >
+          @if (isSubmitting()) {
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Posting...</span>
+          } @else {
+            <i class="pi pi-check"></i>
+            <span>Post Transaction</span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

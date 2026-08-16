@@ -1,0 +1,105 @@
+<div class="insights-page animate-fade-in">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Monthly Financial Insights</h1>
+      <p class="page-subtitle">Detailed breakdown of inflows, expenditures, and category-wise spending patterns.</p>
+    </div>
+
+    <div class="insights-filters">
+
+      <div class="filter-box">
+        <span class="lbl">Account:</span>
+        <select class="form-select select-sm" [ngModel]="selectedAccountFilter()"
+          (ngModelChange)="selectedAccountFilter.set($event)">
+          <option value="ALL">All Portfolio Accounts</option>
+          @for (a of bankingService.accounts(); track a.id) {
+          @if (selectedUser() == a.customerId){
+            <option [value]="a.id">
+            {{ a.id }} ({{ a.type }} - {{ a.customerId }})
+          </option>
+          }
+          }
+        </select>
+      </div>
+
+
+      <div class="filter-box">
+        <span class="lbl">Month:</span>
+        <select class="form-select select-sm" [ngModel]="selectedMonth()" (ngModelChange)="selectedMonth.set($event)">
+          @for (m of availableMonths(); track m.value) {
+          <option [value]="m.value">
+            {{ m.label }}
+          </option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+
+    <app-stat-card title="Total Credit (Inflows)" [value]="(insightsData().totalCredit | egpCurrency)"
+      icon="pi pi-arrow-down-left" iconColorClass="icon-green" subtitle="Total deposits & salary" badgeText="Inflow"
+      badgeClass="badge-up"></app-stat-card>
+
+
+    <app-stat-card title="Total Debit (Outflows)" [value]="(insightsData().totalDebit | egpCurrency)"
+      icon="pi pi-arrow-up-right" iconColorClass="icon-rose" subtitle="Bills, shopping & expenses" badgeText="Outflow"
+      badgeClass="badge-down"></app-stat-card>
+
+    <app-stat-card title="Net Cash Flow" [value]="(insightsData().netFlow | egpCurrency)"
+      [icon]="insightsData().netFlow >= 0 ? 'pi pi-trending-up' : 'pi pi-trending-down'"
+      [iconColorClass]="insightsData().netFlow >= 0 ? 'icon-blue' : 'icon-rose'"
+      [subtitle]="insightsData().netFlow >= 0 ? 'Surplus liquidity' : 'Deficit this month'"
+      [badgeText]="insightsData().netFlow >= 0 ? 'Positive' : 'Negative'"
+      [badgeClass]="insightsData().netFlow >= 0 ? 'badge-up' : 'badge-down'" [highlight]="true"></app-stat-card>
+
+
+    <app-stat-card title="Top Spending Category" [value]="insightsData().highestSpendingCategory" icon="pi pi-crown"
+      iconColorClass="icon-amber" [subtitle]="(insightsData().highestSpendingAmount | egpCurrency) + ' spent'"
+      badgeText="Peak Spend" badgeClass="badge-neutral"></app-stat-card>
+  </div>
+
+
+  <div class="bank-card breakdown-card">
+    <div class="card-header-row">
+      <div>
+        <h2 class="card-title">Category Spending Breakdown</h2>
+        <p class="card-subtitle">Distribution of debit expenses across commercial categories for the selected period.
+        </p>
+      </div>
+      <span class="badge badge-debit">
+        Total Debit: {{ insightsData().totalDebit | egpCurrency }}
+      </span>
+    </div>
+
+    @if (insightsData().categoryBreakdown.length > 0) {
+    <div class="breakdown-list">
+      @for (item of insightsData().categoryBreakdown; track item.category) {
+      <div class="breakdown-item">
+        <div class="item-meta-row">
+          <div class="item-title-wrap">
+            <span class="cat-name">{{ item.category }}</span>
+            <span class="tx-badge">{{ item.count }} transactions</span>
+          </div>
+          <div class="item-val-wrap">
+            <span class="amount-val mono-text">{{ item.amount | egpCurrency }}</span>
+            <span class="percentage-val mono-text">{{ item.percentage }}%</span>
+          </div>
+        </div>
+
+
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="item.percentage"
+            [style.background-color]="getCategoryColor(item.category)"></div>
+        </div>
+      </div>
+      }
+    </div>
+    } @else {
+    <app-empty-state icon="pi pi-chart-pie" title="No expense data for this month"
+      description="There are no debit transactions recorded for the selected account and month."></app-empty-state>
+    }
+  </div>
+</div>

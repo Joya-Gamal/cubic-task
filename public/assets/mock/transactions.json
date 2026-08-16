@@ -1,0 +1,110 @@
+[
+  {
+    "id": "T9001",
+    "accountId": "A1001",
+    "date": "2025-12-01",
+    "type": "Debit",
+    "amount": 250.75,
+    "merchant": "Carrefour",
+    "category": "Groceries"
+  },
+  {
+    "id": "T9002",
+    "accountId": "A1001",
+    "date": "2025-12-05",
+    "type": "Debit",
+    "amount": 1200.00,
+    "merchant": "Vodafone",
+    "category": "Bills"
+  },
+  {
+    "id": "T9003",
+    "accountId": "A1001",
+    "date": "2025-12-25",
+    "type": "Credit",
+    "amount": 8500.00,
+    "merchant": "Company Salary",
+    "category": "Income"
+  },
+  {
+    "id": "T9004",
+    "accountId": "A1001",
+    "date": "2026-01-08",
+    "type": "Debit",
+    "amount": 450.00,
+    "merchant": "Spinneys",
+    "category": "Groceries"
+  },
+  {
+    "id": "T9005",
+    "accountId": "A1001",
+    "date": "2026-01-15",
+    "type": "Debit",
+    "amount": 350.00,
+    "merchant": "Cinema Galaxy",
+    "category": "Entertainment"
+  },
+  {
+    "id": "T9006",
+    "accountId": "A1001",
+    "date": "2026-01-25",
+    "type": "Credit",
+    "amount": 8500.00,
+    "merchant": "Company Salary",
+    "category": "Income"
+  },
+  {
+    "id": "T9007",
+    "accountId": "A1001",
+    "date": "2026-02-02",
+    "type": "Debit",
+    "amount": 890.50,
+    "merchant": "Zara Egypt",
+    "category": "Shopping"
+  },
+  {
+    "id": "T9008",
+    "accountId": "A1001",
+    "date": "2026-02-10",
+    "type": "Debit",
+    "amount": 150.00,
+    "merchant": "Bank Maintenance",
+    "category": "Fees"
+  },
+  {
+    "id": "T9101",
+    "accountId": "A2001",
+    "date": "2025-12-10",
+    "type": "Debit",
+    "amount": 75.50,
+    "merchant": "Amazon",
+    "category": "Shopping"
+  },
+  {
+    "id": "T9102",
+    "accountId": "A2001",
+    "date": "2026-01-04",
+    "type": "Credit",
+    "amount": 15000.00,
+    "merchant": "Consulting Fee",
+    "category": "Income"
+  },
+  {
+    "id": "T9103",
+    "accountId": "A2001",
+    "date": "2026-01-18",
+    "type": "Debit",
+    "amount": 2300.00,
+    "merchant": "Virgin Megastore",
+    "category": "Shopping"
+  },
+  {
+    "id": "T9104",
+    "accountId": "A1002",
+    "date": "2026-01-01",
+    "type": "Credit",
+    "amount": 3500.00,
+    "merchant": "Interest Credit",
+    "category": "Income"
+  }
+]

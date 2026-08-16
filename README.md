@@ -194,3 +194,4 @@ npm test -- --watch=false
 
 *(You can also use the **Quick Demo Login** buttons on the login screen for one-click access).*
 # cubic-task
+# task-cubic
